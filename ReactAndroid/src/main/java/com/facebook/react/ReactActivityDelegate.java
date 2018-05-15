@@ -8,15 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
-import com.facebook.common.logging.FLog;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.common.ReactConstants;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
@@ -29,8 +25,6 @@ import javax.annotation.Nullable;
  * class doesn't implement {@link ReactApplication}.
  */
 public class ReactActivityDelegate {
-  private static final String REDBOX_PERMISSION_MESSAGE =
-    "Overlay permissions needs to be granted in order for react native apps to run in dev mode";
 
   private final @Nullable Activity mActivity;
   private final @Nullable FragmentActivity mFragmentActivity;
@@ -79,16 +73,6 @@ public class ReactActivityDelegate {
   }
 
   protected void onCreate(Bundle savedInstanceState) {
-    if (getReactNativeHost().getUseDeveloperSupport() && Build.VERSION.SDK_INT >= 23) {
-      // Get permission to show redbox in dev builds.
-      if (!Settings.canDrawOverlays(getContext())) {
-        Intent serviceIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-        getContext().startActivity(serviceIntent);
-        FLog.w(ReactConstants.TAG, REDBOX_PERMISSION_MESSAGE);
-        Toast.makeText(getContext(), REDBOX_PERMISSION_MESSAGE, Toast.LENGTH_LONG).show();
-      }
-    }
-
     if (mMainComponentName != null) {
       loadApp(mMainComponentName);
     }
@@ -143,6 +127,16 @@ public class ReactActivityDelegate {
     }
   }
 
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (getReactNativeHost().hasInstance()
+      && getReactNativeHost().getUseDeveloperSupport()
+      && keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD) {
+      event.startTracking();
+      return true;
+    }
+    return false;
+  }
+
   public boolean onKeyUp(int keyCode, KeyEvent event) {
     if (getReactNativeHost().hasInstance() && getReactNativeHost().getUseDeveloperSupport()) {
       if (keyCode == KeyEvent.KEYCODE_MENU) {
@@ -155,6 +149,16 @@ public class ReactActivityDelegate {
         getReactNativeHost().getReactInstanceManager().getDevSupportManager().handleReloadJS();
         return true;
       }
+    }
+    return false;
+  }
+
+  public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+    if (getReactNativeHost().hasInstance()
+        && getReactNativeHost().getUseDeveloperSupport()
+        && keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD) {
+      getReactNativeHost().getReactInstanceManager().showDevOptionsDialog();
+      return true;
     }
     return false;
   }
@@ -191,8 +195,7 @@ public class ReactActivityDelegate {
     mPermissionsCallback = new Callback() {
       @Override
       public void invoke(Object... args) {
-        if (mPermissionListener != null &&
-        mPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+        if (mPermissionListener != null && mPermissionListener.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
           mPermissionListener = null;
         }
       }

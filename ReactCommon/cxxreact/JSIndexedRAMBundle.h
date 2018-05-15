@@ -5,23 +5,25 @@
 #include <fstream>
 #include <memory>
 
-#include "Executor.h"
-#include "JSBundleType.h"
+#include <cxxreact/JSBigString.h>
+#include <cxxreact/JSModulesUnbundle.h>
+
+#ifndef RN_EXPORT
+#define RN_EXPORT __attribute__((visibility("default")))
+#endif
 
 namespace facebook {
 namespace react {
 
-class JSBigString;
-
-#include <cxxreact/JSModulesUnbundle.h>
-
-class JSIndexedRAMBundle : public facebook::react::JSModulesUnbundle {
+class RN_EXPORT JSIndexedRAMBundle : public JSModulesUnbundle {
 public:
+  static std::function<std::unique_ptr<JSModulesUnbundle>(std::string)> buildFactory();
+
   // Throws std::runtime_error on failure.
   JSIndexedRAMBundle(const char *sourceURL);
 
   // Throws std::runtime_error on failure.
-  std::unique_ptr<const facebook::react::JSBigString> getStartupCode();
+  std::unique_ptr<const JSBigString> getStartupCode();
   // Throws std::runtime_error on failure.
   Module getModule(uint32_t moduleId) const override;
 
@@ -40,7 +42,7 @@ private:
     ModuleTable() : numEntries(0) {};
     ModuleTable(size_t entries) :
       numEntries(entries),
-      data(std::make_unique<ModuleData[]>(numEntries)) {};
+      data(std::unique_ptr<ModuleData[]>(new ModuleData[numEntries])) {};
     size_t byteLength() const {
       return numEntries * sizeof(ModuleData);
     }
@@ -56,7 +58,7 @@ private:
   mutable std::ifstream m_bundle;
   ModuleTable m_table;
   size_t m_baseOffset;
-  std::unique_ptr<facebook::react::JSBigBufferString> m_startupCode;
+  std::unique_ptr<JSBigBufferString> m_startupCode;
 };
 
 }  // namespace react

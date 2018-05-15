@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include <folly/Optional.h>
-
 #include <memory>
 #include <string>
 
+#include <folly/Optional.h>
 #include <jschelpers/Value.h>
-
-#include "ModuleRegistry.h"
 
 namespace facebook {
 namespace react {
+
+class ModuleRegistry;
 
 /**
  * Holds and creates JS representations of the modules in ModuleRegistry

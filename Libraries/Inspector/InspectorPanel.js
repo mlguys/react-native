@@ -1,66 +1,57 @@
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
- * @providesModule InspectorPanel
+ * @format
  * @flow
  */
+
 'use strict';
 
-var React = require('React');
-var StyleSheet = require('StyleSheet');
-var Text = require('Text');
-var View = require('View');
-var ElementProperties = require('ElementProperties');
-var PerformanceOverlay = require('PerformanceOverlay');
-var TouchableHighlight = require('TouchableHighlight');
-var NetworkOverlay = require('NetworkOverlay');
+const ElementProperties = require('ElementProperties');
+const NetworkOverlay = require('NetworkOverlay');
+const PerformanceOverlay = require('PerformanceOverlay');
+const React = require('React');
+const PropTypes = require('prop-types');
+const ScrollView = require('ScrollView');
+const StyleSheet = require('StyleSheet');
+const Text = require('Text');
+const TouchableHighlight = require('TouchableHighlight');
+const View = require('View');
 
-var PropTypes = React.PropTypes;
-
-class InspectorPanel extends React.Component {
+class InspectorPanel extends React.Component<$FlowFixMeProps> {
   renderWaiting() {
     if (this.props.inspecting) {
       return (
-        <Text style={styles.waitingText}>
-          Tap something to inspect it
-        </Text>
+        <Text style={styles.waitingText}>Tap something to inspect it</Text>
       );
     }
     return <Text style={styles.waitingText}>Nothing is inspected</Text>;
   }
 
   render() {
-    var contents;
+    let contents;
     if (this.props.inspected) {
       contents = (
-        <ElementProperties
-          style={this.props.inspected.style}
-          frame={this.props.inspected.frame}
-          source={this.props.inspected.source}
-          hierarchy={this.props.hierarchy}
-          selection={this.props.selection}
-          setSelection={this.props.setSelection}
-        />
+        <ScrollView style={styles.properties}>
+          <ElementProperties
+            style={this.props.inspected.style}
+            frame={this.props.inspected.frame}
+            source={this.props.inspected.source}
+            hierarchy={this.props.hierarchy}
+            selection={this.props.selection}
+            setSelection={this.props.setSelection}
+          />
+        </ScrollView>
       );
     } else if (this.props.perfing) {
-      contents = (
-        <PerformanceOverlay />
-      );
+      contents = <PerformanceOverlay />;
     } else if (this.props.networking) {
-      contents = (
-        <NetworkOverlay />
-      );
+      contents = <NetworkOverlay />;
     } else {
-      contents = (
-        <View style={styles.waiting}>
-          {this.renderWaiting()}
-        </View>
-      );
+      contents = <View style={styles.waiting}>{this.renderWaiting()}</View>;
     }
     return (
       <View style={styles.container}>
@@ -71,17 +62,20 @@ class InspectorPanel extends React.Component {
             pressed={this.props.inspecting}
             onClick={this.props.setInspecting}
           />
-          <Button title={'Perf'}
+          <Button
+            title={'Perf'}
             pressed={this.props.perfing}
             onClick={this.props.setPerfing}
           />
-          <Button title={'Network'}
+          <Button
+            title={'Network'}
             pressed={this.props.networking}
             onClick={this.props.setNetworking}
           />
-          <Button title={'Touchables'}
-            pressed={this.props.touchTargetting}
-            onClick={this.props.setTouchTargetting}
+          <Button
+            title={'Touchables'}
+            pressed={this.props.touchTargeting}
+            onClick={this.props.setTouchTargeting}
           />
         </View>
       </View>
@@ -96,26 +90,25 @@ InspectorPanel.propTypes = {
   inspected: PropTypes.object,
   perfing: PropTypes.bool,
   setPerfing: PropTypes.func,
-  touchTargetting: PropTypes.bool,
-  setTouchTargetting: PropTypes.func,
+  touchTargeting: PropTypes.bool,
+  setTouchTargeting: PropTypes.func,
   networking: PropTypes.bool,
   setNetworking: PropTypes.func,
 };
 
-class Button extends React.Component {
+class Button extends React.Component<$FlowFixMeProps> {
   render() {
     return (
-      <TouchableHighlight onPress={() => this.props.onClick(!this.props.pressed)} style={[
-        styles.button,
-        this.props.pressed && styles.buttonPressed
-      ]}>
+      <TouchableHighlight
+        onPress={() => this.props.onClick(!this.props.pressed)}
+        style={[styles.button, this.props.pressed && styles.buttonPressed]}>
         <Text style={styles.buttonText}>{this.props.title}</Text>
       </TouchableHighlight>
     );
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
   },
@@ -136,6 +129,9 @@ var styles = StyleSheet.create({
   },
   container: {
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  properties: {
+    height: 200,
   },
   waiting: {
     height: 100,

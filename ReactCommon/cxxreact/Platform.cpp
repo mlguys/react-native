@@ -5,23 +5,21 @@
 namespace facebook {
 namespace react {
 
-namespace ReactMarker {
-LogMarker logMarker;
-};
+#if __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+#endif
 
-namespace WebWorkerUtil {
-WebWorkerQueueFactory createWebWorkerThread;
-LoadScriptFromAssets loadScriptFromAssets;
-LoadScriptFromNetworkSync loadScriptFromNetworkSync;
-};
+namespace JSCNativeHooks {
 
-namespace PerfLogging {
-InstallNativeHooks installNativeHooks;
-};
-
-namespace JSNativeHooks {
 Hook loggingHook = nullptr;
 Hook nowHook = nullptr;
+ConfigurationHook installPerfHooks = nullptr;
+
 }
+
+#if __clang__
+#pragma clang diagnostic pop
+#endif
 
 } }
