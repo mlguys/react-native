@@ -113,8 +113,8 @@
 
   XCTAssertEqual(containerView.reactSubviews.count, (NSUInteger)13,
                @"Expect to have 13 react subviews after calling manage children\
-               with 5 tags to remove and 18 prior children, instead have %zd",
-               containerView.reactSubviews.count);
+               with 5 tags to remove and 18 prior children, instead have %lld",
+               (long long)containerView.reactSubviews.count);
   for (UIView *view in removedViews) {
     XCTAssertTrue([view reactSuperview] == nil,
                  @"Expected to have manage children successfully remove children");

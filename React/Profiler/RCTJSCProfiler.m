@@ -22,7 +22,7 @@
 #include <dlfcn.h>
 
 #ifndef RCT_JSC_PROFILER_DYLIB
-  #define RCT_JSC_PROFILER_DYLIB [[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"RCTJSCProfiler.ios%zd", [[[UIDevice currentDevice] systemVersion] integerValue]] ofType:@"dylib" inDirectory:@"RCTJSCProfiler"] UTF8String]
+  #define RCT_JSC_PROFILER_DYLIB [[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"RCTJSCProfiler.ios%lld", [[[UIDevice currentDevice] systemVersion] (long long)integerValue]] ofType:@"dylib" inDirectory:@"RCTJSCProfiler"] UTF8String]
 #endif
 
 static const char *const JSCProfileName = "profile";

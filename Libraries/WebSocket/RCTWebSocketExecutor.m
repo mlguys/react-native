@@ -66,7 +66,7 @@ RCT_EXPORT_MODULE()
     if (!host) {
       host = @"localhost";
     }
-    NSString *URLString = [NSString stringWithFormat:@"http://%@:%zd/debugger-proxy?role=client", host, port];
+    NSString *URLString = [NSString stringWithFormat:@"http://%@:%lld/debugger-proxy?role=client", host, (long long)port];
     _url = [RCTConvert NSURL:URLString];
   }
 

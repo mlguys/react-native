@@ -68,7 +68,7 @@ RCT_CUSTOM_CONVERTER(NSData *, NSData, [json dataUsingEncoding:NSUTF8StringEncod
   for (NSNumber *number in json) {
     NSInteger index = number.integerValue;
     if (RCT_DEBUG && index < 0) {
-      RCTLogError(@"Invalid index value %zd. Indices must be positive.", index);
+      RCTLogError(@"Invalid index value %lld. Indices must be positive.", (long long)index);
     }
     [indexSet addIndex:index];
   }
@@ -404,7 +404,7 @@ static void RCTConvertCGStructValue(const char *type, NSArray *fields, NSDiction
   NSUInteger count = fields.count;
   if ([json isKindOfClass:[NSArray class]]) {
     if (RCT_DEBUG && [json count] != count) {
-      RCTLogError(@"Expected array with count %zd, but count is %zd: %@", count, [json count], json);
+      RCTLogError(@"Expected array with count %lld, but count is %lld: %@", (long long)count, (long long)[json count], json);
     } else {
       for (NSUInteger i = 0; i < count; i++) {
         result[i] = [RCTConvert CGFloat:json[i]];

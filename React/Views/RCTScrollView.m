@@ -971,8 +971,8 @@ RCT_SCROLL_EVENT_HANDLER(scrollViewDidZoom, onScroll)
       lastIndex = _scrollView.stickyHeaderIndices.lastIndex;
     }
     if (lastIndex != NSNotFound && lastIndex >= subviewCount) {
-      RCTLogWarn(@"Sticky header index %zd was outside the range {0, %zd}",
-                 lastIndex, subviewCount);
+      RCTLogWarn(@"Sticky header index %lld was outside the range {0, %lld}",
+                 (long long)lastIndex, (long long)subviewCount);
     }
   }
 }

@@ -83,7 +83,7 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
       // http://stackoverflow.com/questions/18870447/how-to-use-the-default-ios7-uianimation-curve
       return (UIViewAnimationOptions)(_currentKeyboardAnimationCurve << 16);
     default:
-      RCTLogError(@"Unsupported animation type %zd", type);
+      RCTLogError(@"Unsupported animation type %lld", (long long)type);
       return UIViewAnimationOptionCurveEaseInOut;
   }
 }
@@ -1473,7 +1473,7 @@ RCT_EXPORT_METHOD(setJSResponder:(nonnull NSNumber *)reactTag
   [self addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
     _jsResponder = viewRegistry[reactTag];
     if (!_jsResponder) {
-      RCTLogError(@"Invalid view set to be the JS responder - tag %zd", reactTag);
+      RCTLogError(@"Invalid view set to be the JS responder - tag %lld", (long long)reactTag);
     }
   }];
 }

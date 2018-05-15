@@ -956,7 +956,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
   }
 
   if (RCT_DEBUG && (moduleIDs.count != methodIDs.count || moduleIDs.count != paramsArrays.count)) {
-    RCTLogError(@"Invalid data message - all must be length: %zd", moduleIDs.count);
+    RCTLogError(@"Invalid data message - all must be length: %lld", (long long)moduleIDs.count);
     return;
   }
 
@@ -1046,13 +1046,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
 
   RCTModuleData *moduleData = _moduleDataByID[moduleID];
   if (RCT_DEBUG && !moduleData) {
-    RCTLogError(@"No module found for id '%zd'", moduleID);
+    RCTLogError(@"No module found for id '%lld'", (long long)moduleID);
     return nil;
   }
 
   id<RCTBridgeMethod> method = moduleData.methods[methodID];
   if (RCT_DEBUG && !method) {
-    RCTLogError(@"Unknown methodID: %zd for module: %zd (%@)", methodID, moduleID, moduleData.name);
+    RCTLogError(@"Unknown methodID: %lld for module: %lld (%@)", (long long)methodID, (long long)moduleID, moduleData.name);
     return nil;
   }
 
